@@ -6,7 +6,7 @@ import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.Panel;
 import java.awt.TextArea;
-import java.awt.TextField;
+import java.awt.TextField;        
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -32,9 +32,10 @@ public class Calculator extends Frame implements ActionListener {
 	Button btnDiv = new OperatorButton("/");
 	Button btnClear = new OperatorButton("CE");
 	Button btnEqual = new OperatorButton("=");
+	Button btnMod = new OperatorButton("%");
 	
 	Double num1, num2, result;
-	int add=0, minus=0, mul=0, div=0;
+	int add, minus, mul, div, mod;
 	
 	public Calculator() {		
 		
@@ -84,7 +85,7 @@ public class Calculator extends Frame implements ActionListener {
 		panel.add(btn8);
 		panel.add(btn9);
 		panel.add(btnDiv);
-		panel.add(new KeyButton("%"));
+		panel.add(btnMod);
 		
 		panel.add(btn4);
 		panel.add(btn5);
@@ -141,19 +142,28 @@ public class Calculator extends Frame implements ActionListener {
 			if(source == btnPlus) {
 				num1 = reader();
 				display.setText("");
-				add=1; mul=0; minus=0; div=0;
+				setOperator();
+				add++;
 			} else if(source == btnMinus) {
 				num1 = reader();
 				display.setText("");
-				add=0; mul=0; minus=1; div=0;
+				setOperator();
+				minus++;
 			} else if(source == btnMul) {
 				num1 = reader();
 				display.setText("");
-				add=0; mul=1; minus=0; div=0;
+				setOperator();
+				mul++;
 			} else if(source == btnDiv) {
 				num1 = reader();
 				display.setText("");
-				add=0; mul=0; minus=0; div=1;
+				setOperator();
+				div++;
+			}else if(source == btnMod) {
+				num1 = reader();
+				display.setText("");
+				setOperator();
+				mod++;
 			} else if(source == btnClear) {
 				display.setText("");
 			} else if(source == btnEqual) {
@@ -167,10 +177,16 @@ public class Calculator extends Frame implements ActionListener {
 					result = num1-num2;
 				} else if(div>0) {
 					result = num1/num2;
+				} else if(mod>0) {
+					result = num1%num2;
 				}
 				display.setText(Double.toString(result));
 			}
 		}
+	}
+	
+	public void setOperator() {
+		add=0; mul=0; minus=0; div=0; mod=0;
 	}
 	
 	public Double reader() {
