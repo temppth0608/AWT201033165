@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.math.BigDecimal;
 
 public class Calculator extends Frame implements ActionListener {
 	
@@ -34,6 +35,7 @@ public class Calculator extends Frame implements ActionListener {
 	Button btnEqual = new OperatorButton("=");
 	Button btnMod = new OperatorButton("%");
 	Button btnBack = new OperatorButton("←");
+	Button btnSquare = new OperatorButton("√");
 	
 	Double num1, num2, result;
 	int add, minus, mul, div, mod;
@@ -63,17 +65,17 @@ public class Calculator extends Frame implements ActionListener {
 		Panel panel = new Panel();
 		
 		panel.setLayout(new GridLayout(2,5));
-		panel.add(new KeyButton("MC"));
-		panel.add(new KeyButton("MR"));
-		panel.add(new KeyButton("MS"));
-		panel.add(new KeyButton("M+"));
-		panel.add(new KeyButton("M-"));
+		panel.add(new OperatorButton("MC"));
+		panel.add(new OperatorButton("MR"));
+		panel.add(new OperatorButton("MS"));
+		panel.add(new OperatorButton("M+"));
+		panel.add(new OperatorButton("M-"));
 		
 		panel.add(btnBack);
 		panel.add(btnClear);
-		panel.add(new KeyButton("C"));
-		panel.add(new KeyButton("±"));
-		panel.add(new KeyButton("√"));
+		panel.add(new OperatorButton("C"));
+		panel.add(new OperatorButton("±"));
+		panel.add(btnSquare);
 		
 		return panel;
 	}
@@ -92,7 +94,7 @@ public class Calculator extends Frame implements ActionListener {
 		panel.add(btn5);
 		panel.add(btn6);
 		panel.add(btnMul);
-		panel.add(new KeyButton("1/x"));
+		panel.add(new OperatorButton("1/x"));
 		
 		return panel;
 	}
@@ -105,7 +107,7 @@ public class Calculator extends Frame implements ActionListener {
 		panel.add(btn2);
 		panel.add(btn3);
 		panel.add(btnMinus);
-		panel.add(new KeyButton("log"));
+		panel.add(new OperatorButton("log"));
 		
 		panel.add(btn0);
 		panel.add(btn00);
@@ -188,8 +190,24 @@ public class Calculator extends Frame implements ActionListener {
 				
 			} else if(source == btnBack) {
 				inputBackspace();
+
+			} else if(source == btnSquare) {
+				calculateSquareRoot();
 			}
 		}
+	}
+
+	public void calculateSquareRoot() {
+		Double value = Double.valueOf(display.getText());
+
+		BigDecimal tmp = new BigDecimal(Math.sqrt(value));
+
+		Double f = tmp.doubleValue();
+		Integer i = tmp.intValue();
+		if(f.equals(Double.valueOf(i)))
+			display.setText(String.valueOf(i));
+		else
+			display.setText(String.valueOf(f));
 	}
 	
 	//백스페이스 구현
