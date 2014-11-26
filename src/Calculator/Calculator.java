@@ -5,8 +5,7 @@ import java.awt.Color;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.Panel;
-import java.awt.TextArea;
-import java.awt.TextField;        
+import java.awt.TextArea;      
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -26,6 +25,7 @@ public class Calculator extends Frame implements ActionListener {
 	Button btn9 = new KeyButton("9");
 	Button btn0 = new KeyButton("0");
 	Button btn00 = new KeyButton("00");
+	
 	Button btnPlus = new OperatorButton("+");
 	Button btnMinus = new OperatorButton("-");
 	Button btnMul = new OperatorButton("*");
@@ -33,6 +33,7 @@ public class Calculator extends Frame implements ActionListener {
 	Button btnClear = new OperatorButton("CE");
 	Button btnEqual = new OperatorButton("=");
 	Button btnMod = new OperatorButton("%");
+	Button btnBack = new OperatorButton("←");
 	
 	Double num1, num2, result;
 	int add, minus, mul, div, mod;
@@ -68,7 +69,7 @@ public class Calculator extends Frame implements ActionListener {
 		panel.add(new KeyButton("M+"));
 		panel.add(new KeyButton("M-"));
 		
-		panel.add(new KeyButton("←"));
+		panel.add(btnBack);
 		panel.add(btnClear);
 		panel.add(new KeyButton("C"));
 		panel.add(new KeyButton("±"));
@@ -139,6 +140,7 @@ public class Calculator extends Frame implements ActionListener {
 		if(source instanceof KeyButton) {
 			display.append(btn.getLabel());
 		} else if(source instanceof OperatorButton) {
+			
 			if(source == btnPlus) {
 				num1 = reader();
 				display.setText("");
@@ -164,8 +166,10 @@ public class Calculator extends Frame implements ActionListener {
 				display.setText("");
 				setOperator();
 				mod++;
+				
 			} else if(source == btnClear) {
 				display.setText("");
+				
 			} else if(source == btnEqual) {
 				num2 = reader();
 				display.setText("");
@@ -181,14 +185,26 @@ public class Calculator extends Frame implements ActionListener {
 					result = num1%num2;
 				}
 				display.setText(Double.toString(result));
+				
+			} else if(source == btnBack) {
+				inputBackspace();
 			}
 		}
+	}
+	
+	//백스페이스 구현
+	public void inputBackspace() {
+		String txtValue = display.getText();
+		display.setText(txtValue.substring(0, txtValue.length()-1));
+		if(display.getText().equals(""))
+			display.setText("0");
 	}
 	
 	public void setOperator() {
 		add=0; mul=0; minus=0; div=0; mod=0;
 	}
 	
+	//텍스트로 부터 문자열 읽어 들이는 함수
 	public Double reader() {
 		Double num;
 		String str = display.getText();
