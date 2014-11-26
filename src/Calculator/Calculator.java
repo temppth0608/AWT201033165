@@ -36,9 +36,18 @@ public class Calculator extends Frame implements ActionListener {
 	Button btnMod = new OperatorButton("%");
 	Button btnBack = new OperatorButton("←");
 	Button btnSquare = new OperatorButton("√");
+	Button btnMPlus = new MemoryButton("M+");
+	Button btnMMinus = new MemoryButton("M-");
+	Button btnMR = new MemoryButton("MR");
+	Button btnMC = new MemoryButton("MC");
 	
 	Double num1, num2, result;
 	int add, minus, mul, div, mod;
+	
+	//현제 입력된 값을 저장해 놓는 변수 
+	BigDecimal memoryValue = new BigDecimal(0);
+	//기존 표시된 내용을 지우고 새로 입력할지 여부 
+	Boolean isNewValue = true;
 	
 	public Calculator() {		
 		
@@ -65,11 +74,11 @@ public class Calculator extends Frame implements ActionListener {
 		Panel panel = new Panel();
 		
 		panel.setLayout(new GridLayout(2,5));
-		panel.add(new OperatorButton("MC"));
-		panel.add(new OperatorButton("MR"));
+		panel.add(btnMC);
+		panel.add(btnMR);
 		panel.add(new OperatorButton("MS"));
-		panel.add(new OperatorButton("M+"));
-		panel.add(new OperatorButton("M-"));
+		panel.add(btnMPlus);
+		panel.add(btnMMinus);
 		
 		panel.add(btnBack);
 		panel.add(btnClear);
@@ -134,13 +143,24 @@ public class Calculator extends Frame implements ActionListener {
 		}
 	}
 	
+	class MemoryButton extends Button {
+
+		public MemoryButton(String label) {
+			super(label);
+			addActionListener(Calculator.this);
+		}
+	}
+	
 	public void actionPerformed(ActionEvent e) {
 
 		Object source = e.getSource();
 		Button btn = (Button)source;
 		
+		//source가 KetButton의 인스턴스 일때 
 		if(source instanceof KeyButton) {
 			display.append(btn.getLabel());
+
+		//source가 OperatorButton의 인스턴스 일때 
 		} else if(source instanceof OperatorButton) {
 			
 			if(source == btnPlus) {
@@ -187,16 +207,39 @@ public class Calculator extends Frame implements ActionListener {
 					result = num1%num2;
 				}
 				display.setText(Double.toString(result));
-				
+
 			} else if(source == btnBack) {
 				inputBackspace();
 
 			} else if(source == btnSquare) {
 				calculateSquareRoot();
 			}
+		
+		//source가 MemoryButton의 인스턴스 일때 
+		}else if(source instanceof MemoryButton) {
+			if(source == btnMPlus) {
+				memoryValue = memoryValue.add(new BigDecimal(Double.valueOf(display.getText())));
+				isNewValue = true;
+			}else if(source == btnMMinus) {
+				memoryValue = memoryValue.subtract(new BigDecimal(Double.valueOf(display.getText())));
+				isNewValue = true;
+			}else if(source == btnMR) {
+				Double d = memoryValue.doubleValue();
+				Integer i = memoryValue.intValue();
+				
+				if(d.equals(Double.valueOf(i)))
+					display.setText(String.valueOf(i));
+				else display.setText(String.valueOf(d));
+				isNewValue = true;
+			}else if(source == btnMC) {
+				memoryValue = new BigDecimal(0);
+				isNewValue = true;
+			}
 		}
 	}
 
+	/////////////////////////기능을 하는 함수////////////////////////
+	//루트 구현
 	public void calculateSquareRoot() {
 		Double value = Double.valueOf(display.getText());
 
@@ -218,6 +261,7 @@ public class Calculator extends Frame implements ActionListener {
 			display.setText("0");
 	}
 	
+	//사칙연산 세팅 
 	public void setOperator() {
 		add=0; mul=0; minus=0; div=0; mod=0;
 	}
